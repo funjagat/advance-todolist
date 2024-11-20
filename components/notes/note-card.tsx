@@ -13,12 +13,16 @@ import {
   Star,
   Clock,
   Tag,
+  Calendar,
+  Bell,
+  AlertTriangle,
 } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import { Textarea } from "@/components/ui/textarea";
 import { useNotes } from "@/context/notes-context";
 import type { Note } from "@/lib/types";
 import ReactMarkdown from "react-markdown";
+import { cn } from "@/lib/utils";
 
 interface NoteCardProps {
   note: Note;
@@ -42,22 +46,43 @@ export function NoteCard({ note }: NoteCardProps) {
   return (
     <Card
       style={{ backgroundColor: note.color }}
-      className="transition-all duration-200 hover:shadow-lg"
+      className={cn(
+        "transition-all duration-200 hover:shadow-lg",
+        note.isPriority && "ring-2 ring-red-500"
+      )}
     >
       <CardHeader className="space-y-1">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <Badge variant="outline">{category}</Badge>
-            {note.isPinned && <Pin className="h-4 w-4 text-yellow-600" />}
-            {note.isFavorite && <Star className="h-4 w-4 text-yellow-600" />}
-            {note.isArchived && <Archive className="h-4 w-4 text-gray-600" />}
+            {note.isPriority && (
+              <Badge variant="destructive" className="gap-1">
+                <AlertTriangle className="h-3 w-3" />
+                Priority
+              </Badge>
+            )}
+            {note.dueDate && (
+              <Badge variant="secondary" className="gap-1">
+                <Calendar className="h-3 w-3" />
+                {new Date(note.dueDate).toLocaleDateString()}
+              </Badge>
+            )}
+            {note.reminder && (
+              <Badge variant="secondary" className="gap-1">
+                <Bell className="h-3 w-3" />
+                Reminder
+              </Badge>
+            )}
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-1">
             <Button
               variant="ghost"
               size="icon"
               onClick={() => togglePin(note.id)}
-              className={note.isPinned ? "text-yellow-600" : ""}
+              className={cn(
+                "hover:text-yellow-600",
+                note.isPinned && "text-yellow-600"
+              )}
             >
               <Pin className="h-4 w-4" />
             </Button>
@@ -65,7 +90,10 @@ export function NoteCard({ note }: NoteCardProps) {
               variant="ghost"
               size="icon"
               onClick={() => toggleFavorite(note.id)}
-              className={note.isFavorite ? "text-yellow-600" : ""}
+              className={cn(
+                "hover:text-yellow-600",
+                note.isFavorite && "text-yellow-600"
+              )}
             >
               <Star className="h-4 w-4" />
             </Button>
@@ -73,7 +101,10 @@ export function NoteCard({ note }: NoteCardProps) {
               variant="ghost"
               size="icon"
               onClick={() => toggleArchive(note.id)}
-              className={note.isArchived ? "text-gray-600" : ""}
+              className={cn(
+                "hover:text-gray-600",
+                note.isArchived && "text-gray-600"
+              )}
             >
               <Archive className="h-4 w-4" />
             </Button>
@@ -96,6 +127,13 @@ export function NoteCard({ note }: NoteCardProps) {
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
+        {note.imageUrl && (
+          <img
+            src={note.imageUrl}
+            alt="Note attachment"
+            className="w-full h-48 object-cover rounded-md"
+          />
+        )}
         {isEditing ? (
           <Textarea
             value={editedContent}

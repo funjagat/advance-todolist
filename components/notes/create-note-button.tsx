@@ -12,7 +12,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, Tag } from "lucide-react";
+import { Plus, Tag, Image as ImageIcon } from "lucide-react";
 import { useNotes } from "@/context/notes-context";
 import {
   Select,
@@ -21,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 
 export function CreateNoteButton() {
   const { addNote, categories, tags, addCategory, addTag } = useNotes();
@@ -30,15 +31,29 @@ export function CreateNoteButton() {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState("");
   const [open, setOpen] = useState(false);
+  const [isPriority, setIsPriority] = useState(false);
+  const [dueDate, setDueDate] = useState("");
+  const [reminder, setReminder] = useState(false);
+  const [imageUrl, setImageUrl] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!content.trim() || !category) return;
 
-    addNote(content, category, selectedTags);
+    addNote(content, category, selectedTags, {
+      isPriority,
+      dueDate,
+      reminder,
+      imageUrl,
+    });
+    
     setContent("");
     setCategory("");
     setSelectedTags([]);
+    setIsPriority(false);
+    setDueDate("");
+    setReminder(false);
+    setImageUrl("");
     setOpen(false);
   };
 
@@ -74,36 +89,38 @@ export function CreateNoteButton() {
           New Note
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle>Create New Note</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label>Category</Label>
-            <Select value={category} onValueChange={setCategory}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select category" />
-              </SelectTrigger>
-              <SelectContent>
-                {categories.map((cat) => (
-                  <SelectItem key={cat} value={cat}>
-                    {cat}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label>Category</Label>
+              <Select value={category} onValueChange={setCategory}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((cat) => (
+                    <SelectItem key={cat} value={cat}>
+                      {cat}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-          <div className="flex gap-2">
-            <Input
-              placeholder="Add new category"
-              value={newCategory}
-              onChange={(e) => setNewCategory(e.target.value)}
-            />
-            <Button type="button" onClick={handleAddCategory}>
-              Add
-            </Button>
+            <div className="flex gap-2">
+              <Input
+                placeholder="Add new category"
+                value={newCategory}
+                onChange={(e) => setNewCategory(e.target.value)}
+              />
+              <Button type="button" onClick={handleAddCategory}>
+                Add
+              </Button>
+            </div>
           </div>
 
           <div className="space-y-2">
@@ -114,6 +131,54 @@ export function CreateNoteButton() {
               onChange={(e) => setContent(e.target.value)}
               className="min-h-[200px] resize-none"
             />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Image URL (optional)</Label>
+            <div className="flex gap-2">
+              <Input
+                type="url"
+                placeholder="https://example.com/image.jpg"
+                value={imageUrl}
+                onChange={(e) => setImageUrl(e.target.value)}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setImageUrl("")}
+                className="shrink-0"
+              >
+                <ImageIcon className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label>Due Date (optional)</Label>
+              <Input
+                type="datetime-local"
+                value={dueDate}
+                onChange={(e) => setDueDate(e.target.value)}
+              />
+            </div>
+
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <Label>Priority Note</Label>
+                <Switch
+                  checked={isPriority}
+                  onCheckedChange={setIsPriority}
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <Label>Set Reminder</Label>
+                <Switch
+                  checked={reminder}
+                  onCheckedChange={setReminder}
+                />
+              </div>
+            </div>
           </div>
 
           <div className="space-y-2">

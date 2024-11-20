@@ -9,11 +9,25 @@ export interface Note {
   tags: string[];
   lastModified: string;
   isFavorite: boolean;
+  isPriority?: boolean;
+  dueDate?: string;
+  reminder?: boolean;
+  imageUrl?: string;
 }
 
 export interface NotesContextType {
   notes: Note[];
-  addNote: (content: string, category: string, tags: string[]) => void;
+  addNote: (
+    content: string,
+    category: string,
+    tags: string[],
+    options?: {
+      isPriority?: boolean;
+      dueDate?: string;
+      reminder?: boolean;
+      imageUrl?: string;
+    }
+  ) => void;
   deleteNote: (id: number) => void;
   updateNote: (id: number, updates: Partial<Note>) => void;
   categories: string[];

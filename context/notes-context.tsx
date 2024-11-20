@@ -26,6 +26,8 @@ export function NotesProvider({ children }: { children: React.ReactNode }) {
       isArchived: note.isArchived || false,
       isFavorite: note.isFavorite || false,
       lastModified: note.lastModified || note.createdAt,
+      isPriority: note.isPriority || false,
+      reminder: note.reminder || false,
     }));
 
     setNotes(validatedNotes);
@@ -33,7 +35,17 @@ export function NotesProvider({ children }: { children: React.ReactNode }) {
     setTags(storedTags);
   }, []);
 
-  const addNote = (content: string, category: string, noteTags: string[]) => {
+  const addNote = (
+    content: string,
+    category: string,
+    noteTags: string[],
+    options: {
+      isPriority?: boolean;
+      dueDate?: string;
+      reminder?: boolean;
+      imageUrl?: string;
+    } = {}
+  ) => {
     const newNote = {
       id: Date.now(),
       content: content.trim(),
@@ -45,6 +57,7 @@ export function NotesProvider({ children }: { children: React.ReactNode }) {
       isArchived: false,
       isFavorite: false,
       color: COLORS[Math.floor(Math.random() * COLORS.length)],
+      ...options,
     };
     const updatedNotes = [newNote, ...notes];
     setNotes(updatedNotes);
