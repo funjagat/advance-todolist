@@ -5,6 +5,11 @@ import { Sidebar } from "@/components/sidebar";
 import { StatsCard } from "@/components/stats-card";
 import { SearchCommand } from "@/components/search-command";
 
+// TODO: Add support for note sharing and collaboration features
+// TODO: Implement note export functionality (PDF, Markdown)
+// TODO: Add support for note templates
+// TODO: Implement note version history
+
 export default function Home() {
   return (
     <div className="flex min-h-screen">

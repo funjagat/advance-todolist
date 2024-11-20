@@ -16,6 +16,17 @@ import { Button } from "./ui/button";
 import { ScrollArea } from "./ui/scroll-area";
 import { motion, AnimatePresence } from "framer-motion";
 
+// TODO: Add drag and drop support for note organization
+// TODO: Implement custom category icons and colors
+// TODO: Add support for nested categories/folders
+// TODO: Implement category sharing and collaboration
+// TODO: Add support for category-specific settings
+// TODO: Implement category statistics and insights
+// TODO: Add support for category templates
+// TODO: Implement category archiving functionality
+// TODO: Add category search and filtering
+// TODO: Implement category export/import functionality
+
 export function Sidebar() {
   const { notes, categories, tags } = useNotes();
   const [showCategories, setShowCategories] = useState(true);

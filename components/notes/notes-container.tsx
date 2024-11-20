@@ -15,19 +15,27 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+// TODO: Add support for note sorting (by date, title, priority)
+// TODO: Implement note grouping by category/tag
+// TODO: Add support for note filtering by date range
+// TODO: Implement note search with advanced filters
+
 export default function NotesContainer() {
   const { notes, categories, tags, searchNotes } = useNotes();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedTag, setSelectedTag] = useState<string>("all");
   const [showArchived, setShowArchived] = useState(false);
+  console.log("Notes", notes);
 
   const filteredNotes = searchQuery
     ? searchNotes(searchQuery)
     : notes.filter((note) => {
         if (!showArchived && note.isArchived) return false;
-        if (selectedCategory !== "all" && note.category !== selectedCategory) return false;
-        if (selectedTag !== "all" && !note.tags.includes(selectedTag)) return false;
+        if (selectedCategory !== "all" && note.category !== selectedCategory)
+          return false;
+        if (selectedTag !== "all" && !note.tags.includes(selectedTag))
+          return false;
         return true;
       });
 

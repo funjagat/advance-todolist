@@ -3,6 +3,17 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import type { Note, NotesContextType } from "@/lib/types";
 
+// TODO: Implement data persistence with IndexedDB
+// TODO: Add support for note synchronization
+// TODO: Implement offline support with service workers
+// TODO: Add support for note backup and restore
+// TODO: Implement data encryption for sensitive notes
+// TODO: Add support for note import/export
+// TODO: Implement note sharing permissions
+// TODO: Add support for note analytics
+// TODO: Implement note search indexing
+// TODO: Add support for note templates
+
 const COLORS = ["#FFF3BF", "#D1F2EB", "#FADBD8", "#E8DAEF", "#D6EAF8"];
 
 const NotesContext = createContext<NotesContextType | undefined>(undefined);
@@ -17,7 +28,6 @@ export function NotesProvider({ children }: { children: React.ReactNode }) {
     const storedCategories = JSON.parse(localStorage.getItem("categories") || "[]");
     const storedTags = JSON.parse(localStorage.getItem("tags") || "[]");
     
-    // Ensure all notes have required properties
     const validatedNotes = storedNotes.map((note: Note) => ({
       ...note,
       tags: note.tags || [],

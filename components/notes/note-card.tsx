@@ -24,6 +24,17 @@ import type { Note } from "@/lib/types";
 import ReactMarkdown from "react-markdown";
 import { cn } from "@/lib/utils";
 
+// TODO: Add rich text editor with formatting options
+// TODO: Implement file attachments (images, documents)
+// TODO: Add support for note categories with color coding
+// TODO: Implement note linking/references between notes
+// TODO: Add collaborative editing with real-time updates
+// TODO: Implement version history and restore functionality
+// TODO: Add support for code snippets with syntax highlighting
+// TODO: Implement note encryption for sensitive information
+// TODO: Add support for voice notes and transcription
+// TODO: Implement OCR for images with text extraction
+
 interface NoteCardProps {
   note: Note;
 }
@@ -39,7 +50,6 @@ export function NoteCard({ note }: NoteCardProps) {
     setIsEditing(false);
   };
 
-  // Ensure tags is always an array
   const tags = note.tags || [];
   const category = note.category || "Uncategorized";
 
