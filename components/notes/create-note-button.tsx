@@ -12,7 +12,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, Tag, Image as ImageIcon } from "lucide-react";
+import { Plus, Tag, Image as ImageIcon, CalendarIcon, BellIcon, AlertTriangle } from "lucide-react";
 import { useNotes } from "@/context/notes-context";
 import {
   Select,
@@ -23,6 +23,9 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
 
 export function CreateNoteButton() {
   const { addNote, categories, tags, addCategory, addTag } = useNotes();
@@ -90,135 +93,201 @@ export function CreateNoteButton() {
           New Note
         </Button>
       </DialogTrigger>
-      <DialogContent className="w-full max-w-3xl h-[90vh] sm:h-auto">
-        <DialogHeader>
-          <DialogTitle>Create New Note</DialogTitle>
+      <DialogContent className="max-w-4xl p-0 h-[90vh] flex flex-col">
+        <DialogHeader className="px-6 pt-6 pb-2">
+          <DialogTitle className="flex items-center gap-2 text-xl">
+            <Plus className="h-5 w-5" />
+            Create New Note
+          </DialogTitle>
         </DialogHeader>
-        <ScrollArea className="h-full max-h-[calc(90vh-8rem)] sm:max-h-none px-1">
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="space-y-2">
-                <Label>Category</Label>
-                <Select value={category} onValueChange={setCategory}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map((cat) => (
-                      <SelectItem key={cat} value={cat}>
-                        {cat}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="flex gap-2">
-                <Input
-                  placeholder="Add new category"
-                  value={newCategory}
-                  onChange={(e) => setNewCategory(e.target.value)}
-                />
-                <Button type="button" onClick={handleAddCategory} className="shrink-0">
-                  Add
-                </Button>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label>Note Content (Markdown supported)</Label>
-              <Textarea
-                placeholder="Write your note here..."
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                className="min-h-[150px] sm:min-h-[200px] resize-none"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label>Image URL (optional)</Label>
-              <div className="flex gap-2">
-                <Input
-                  type="url"
-                  placeholder="https://example.com/image.jpg"
-                  value={imageUrl}
-                  onChange={(e) => setImageUrl(e.target.value)}
-                />
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setImageUrl("")}
-                  className="shrink-0"
-                >
-                  <ImageIcon className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="space-y-2">
-                <Label>Due Date (optional)</Label>
-                <Input
-                  type="datetime-local"
-                  value={dueDate}
-                  onChange={(e) => setDueDate(e.target.value)}
-                />
-              </div>
-
+        
+        <div className="flex-1 overflow-hidden">
+          <ScrollArea className="h-full">
+            <form onSubmit={handleSubmit} className="space-y-6 px-6">
               <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <Label>Priority Note</Label>
-                  <Switch
-                    checked={isPriority}
-                    onCheckedChange={setIsPriority}
-                  />
+                <div className="grid gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium">Category</Label>
+                    <div className="flex gap-2">
+                      <Select value={category} onValueChange={setCategory}>
+                        <SelectTrigger className="flex-1">
+                          <SelectValue placeholder="Select category" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {categories.map((cat) => (
+                            <SelectItem key={cat} value={cat}>
+                              {cat}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <div className="flex gap-2 flex-1">
+                        <Input
+                          placeholder="Add new category"
+                          value={newCategory}
+                          onChange={(e) => setNewCategory(e.target.value)}
+                          className="flex-1"
+                        />
+                        <Button 
+                          type="button" 
+                          onClick={handleAddCategory} 
+                          variant="secondary"
+                          className="shrink-0"
+                        >
+                          Add
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium">Note Content</Label>
+                    <div className="relative">
+                      <Textarea
+                        placeholder="Write your note here... (Markdown supported)"
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                        className="min-h-[200px] resize-none pr-20"
+                      />
+                      <div className="absolute bottom-2 right-2 text-xs text-muted-foreground">
+                        {content.length} characters
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium">Image URL</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        type="url"
+                        placeholder="https://example.com/image.jpg"
+                        value={imageUrl}
+                        onChange={(e) => setImageUrl(e.target.value)}
+                        className="flex-1"
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => setImageUrl("")}
+                        className={cn(
+                          "shrink-0",
+                          imageUrl && "text-destructive hover:text-destructive"
+                        )}
+                      >
+                        <ImageIcon className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex items-center justify-between">
-                  <Label>Set Reminder</Label>
-                  <Switch
-                    checked={reminder}
-                    onCheckedChange={setReminder}
-                  />
+
+                <Separator />
+
+                <div className="grid gap-6 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium">Settings</Label>
+                    <div className="space-y-4 rounded-lg border p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <AlertTriangle className="h-4 w-4 text-yellow-500" />
+                          <span className="text-sm">Priority Note</span>
+                        </div>
+                        <Switch
+                          checked={isPriority}
+                          onCheckedChange={setIsPriority}
+                        />
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <BellIcon className="h-4 w-4 text-blue-500" />
+                          <span className="text-sm">Set Reminder</span>
+                        </div>
+                        <Switch
+                          checked={reminder}
+                          onCheckedChange={setReminder}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium">Due Date</Label>
+                    <div className="rounded-lg border p-4">
+                      <div className="flex items-center gap-2">
+                        <CalendarIcon className="h-4 w-4 text-green-500" />
+                        <Input
+                          type="datetime-local"
+                          value={dueDate}
+                          onChange={(e) => setDueDate(e.target.value)}
+                          className="flex-1"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <Separator />
+
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <Label className="text-sm font-medium">Tags</Label>
+                    <div className="flex items-center gap-2">
+                      <Input
+                        placeholder="Add new tag"
+                        value={newTag}
+                        onChange={(e) => setNewTag(e.target.value)}
+                        className="w-[200px]"
+                      />
+                      <Button 
+                        type="button" 
+                        onClick={handleAddTag} 
+                        variant="secondary"
+                        size="sm"
+                      >
+                        Add
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  <ScrollArea className="h-20 rounded-lg border p-4">
+                    {tags.length > 0 ? (
+                      <div className="flex flex-wrap gap-2">
+                        {tags.map((tag) => (
+                          <Badge
+                            key={tag}
+                            variant={selectedTags.includes(tag) ? "default" : "outline"}
+                            className="cursor-pointer"
+                            onClick={() => toggleTag(tag)}
+                          >
+                            <Tag className="h-3 w-3 mr-1" />
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
+                        No tags available. Create one above.
+                      </div>
+                    )}
+                  </ScrollArea>
                 </div>
               </div>
-            </div>
+            </form>
+          </ScrollArea>
+        </div>
 
-            <div className="space-y-2">
-              <Label>Tags</Label>
-              <ScrollArea className="h-20 w-full rounded-md border p-2">
-                <div className="flex flex-wrap gap-2">
-                  {tags.map((tag) => (
-                    <Button
-                      key={tag}
-                      type="button"
-                      variant={selectedTags.includes(tag) ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => toggleTag(tag)}
-                    >
-                      <Tag className="h-3 w-3 mr-1" />
-                      {tag}
-                    </Button>
-                  ))}
-                </div>
-              </ScrollArea>
-            </div>
-
-            <div className="flex gap-2">
-              <Input
-                placeholder="Add new tag"
-                value={newTag}
-                onChange={(e) => setNewTag(e.target.value)}
-              />
-              <Button type="button" onClick={handleAddTag} className="shrink-0">
-                Add
-              </Button>
-            </div>
-
-            <Button type="submit" className="w-full">
-              Save Note
+        <div className="border-t p-4 mt-auto">
+          <div className="flex justify-end gap-2">
+            <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+              Cancel
             </Button>
-          </form>
-        </ScrollArea>
+            <Button 
+              onClick={handleSubmit} 
+              disabled={!content.trim() || !category}
+            >
+              Create Note
+            </Button>
+          </div>
+        </div>
       </DialogContent>
     </Dialog>
   );
