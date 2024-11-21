@@ -13,6 +13,18 @@ export interface Note {
   dueDate?: string;
   reminder?: boolean;
   imageUrl?: string;
+  isCompleted?: boolean;
+  collaborators?: string[];
+  version?: number;
+  wordCount?: number;
+  readingTime?: number;
+  attachments?: string[];
+  labels?: { [key: string]: string };
+  checklist?: { id: string; text: string; checked: boolean }[];
+  mentions?: string[];
+  mood?: 'happy' | 'neutral' | 'sad';
+  weather?: string;
+  location?: { lat: number; lng: number; name: string };
 }
 
 export interface NotesContextType {
@@ -26,6 +38,12 @@ export interface NotesContextType {
       dueDate?: string;
       reminder?: boolean;
       imageUrl?: string;
+      collaborators?: string[];
+      checklist?: { id: string; text: string; checked: boolean }[];
+      labels?: { [key: string]: string };
+      mood?: 'happy' | 'neutral' | 'sad';
+      weather?: string;
+      location?: { lat: number; lng: number; name: string };
     }
   ) => void;
   deleteNote: (id: number) => void;
